@@ -14,6 +14,11 @@ Force the front page to the `front-page.php` template file without any user inte
 
 Upload the to your `wp-content/plugins` directory and configure it on `Settings -> Reading`.
 
+== TODO ==
+
+* Load correct body class
+* Flush rules on reading settings save
+
 == Changelog ==
 
 = 0.01 =
