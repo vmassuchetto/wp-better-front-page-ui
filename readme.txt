@@ -1,4 +1,3 @@
-
 === Force Front Page ===
 
 Contributors: viniciusmassuchetto, leogermani
@@ -45,6 +44,7 @@ Upload the to your `wp-content/plugins` directory and configure it on `Settings
 
 * Load correct body classes
 * Flush rules on reading settings save
+* Reset rules to default on plugin deactivation
 
 == Changelog ==
 
