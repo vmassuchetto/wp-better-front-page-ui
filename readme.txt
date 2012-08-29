@@ -11,7 +11,7 @@ Force the front page without any user interference or dummy pages. The site home
 
 == Description ==
 
-This plugin came from a discussion about how WordPress should deal with the site home page. The supported way today is:
+This plugin idea came from a discussion [here](http://lists.automattic.com/pipermail/wp-hackers/2012-August/044235.html), [here](http://core.trac.wordpress.org/ticket/16379) and [here](http://core.trac.wordpress.org/ticket/18705) (so far) about how WordPress should deal with the site home page. The supported way today is:
 
 1. Define a `front-page.php` for the site home and a `home.php` for the posts home.
 2. Go to the site admin and create a dummy page.
