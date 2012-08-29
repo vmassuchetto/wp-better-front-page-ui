@@ -11,11 +11,12 @@
 class Force_Front_Page {
 
     function Force_Front_Page() {
+        register_activation_hook( __FILE__, array( $this, 'activate' ) );
         if ( is_admin() ) {
             add_action( 'admin_init', array( $this, 'admin_init' ) );
-            add_filter( 'whitelist_options', array( $this, 'whilelist_options' ) );
+            add_filter( 'whitelist_options', array( $this, 'whitelist_options' ) );
         }
-        add_action( 'init', array( $this, 'init' ) );
+        add_action( 'rewrite_rules_array', array( $this, 'rewrite_rules_array' ), 9999 );
         add_filter( 'query_vars', array( $this, 'query_vars' ) );
         add_action( 'template_include', array( $this, 'template' ) );
     }
@@ -25,10 +26,12 @@ class Force_Front_Page {
             update_option( 'force_front_page_posts_page', 'posts' );
     }
 
-    function init() {
-        register_activation_hook( __FILE__, array( $this, 'activate' ) );
+    function rewrite_rules_array( $rules ) {
         $option = get_option( 'force_front_page_posts_page' );
-        add_rewrite_rule( '^' . $option . '/?$', 'index.php?post_type=post&posts_home=1', 'top' );
+        $posts_home_rule = array(
+            $option . '/?$' => 'index.php?post_type=post&posts_home=1'
+        );
+        return array_merge( $posts_home_rule, $rules );
     }
 
     function query_vars( $vars ) {
@@ -37,10 +40,13 @@ class Force_Front_Page {
     }
 
     function template( $template ) {
-        if ( get_query_var( 'posts_home' ) )
-            return get_stylesheet_directory() . '/home.php';
-        elseif ( is_home() )
-            return get_stylesheet_directory() . '/front-page.php';
+        $templates = array ( 'front-page.php', 'home.php', 'index.php' );
+        if ( get_query_var( 'posts_home' ) ) {
+            array_shift( $templates );
+            return locate_template( $templates );
+        } elseif ( is_home() ) {
+            return locate_template( $templates );
+        }
         return $template;
     }
 
@@ -49,7 +55,7 @@ class Force_Front_Page {
             array( $this, 'register_setting_reading' ), 'reading', 'default' );
     }
 
-    function whilelist_options( $options ) {
+    function whitelist_options( $options ) {
         $options['reading'][] = 'force_front_page_posts_page';
         return $options;
     }
@@ -76,4 +82,3 @@ function force_front_page_init() {
     new Force_Front_Page();
 }
 add_action( 'plugins_loaded', 'force_front_page_init' );
-
