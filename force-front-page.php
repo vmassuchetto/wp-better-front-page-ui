@@ -13,9 +13,11 @@ class Force_Front_Page {
     function Force_Front_Page() {
         if ( is_admin() ) {
             add_action( 'admin_init', array( $this, 'admin_init' ) );
-            add_filter( 'whitelist_options', array( $this, 'whilelist_options' ), 10, 3 );
+            add_filter( 'whitelist_options', array( $this, 'whilelist_options' ) );
         }
         add_action( 'init', array( $this, 'init' ) );
+        add_filter( 'query_vars', array( $this, 'query_vars' ) );
+        add_action( 'template_include', array( $this, 'template' ) );
     }
 
     function activate() {
@@ -26,7 +28,20 @@ class Force_Front_Page {
     function init() {
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
         $option = get_option( 'force_front_page_posts_page' );
-        add_rewrite_rule( '^' . $option . '/?$', 'index.php?post_type=post', 'top' );
+        add_rewrite_rule( '^' . $option . '/?$', 'index.php?post_type=post&posts_home=1', 'top' );
+    }
+
+    function query_vars( $vars ) {
+        array_push( $vars, 'posts_home' );
+        return $vars;
+    }
+
+    function template( $template ) {
+        if ( get_query_var( 'posts_home' ) )
+            return get_stylesheet_directory() . '/home.php';
+        elseif ( is_home() )
+            return get_stylesheet_directory() . '/front-page.php';
+        return $template;
     }
 
     function admin_init() {
