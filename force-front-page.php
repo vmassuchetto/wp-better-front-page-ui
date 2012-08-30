@@ -26,12 +26,7 @@ class Force_Front_Page {
         add_filter( 'query_vars', array( $this, 'query_vars' ) );
         add_action( 'admin_print_footer_scripts', array( $this, 'remove_reading_option' ) );
     }
-    
-    function get_option() {
-        $option = get_option($this->option_name);
-        return !$option || empty($option) ? $this->default_value : $option;
-    }
-    
+
     function activate() {
         flush_rewrite_rules();
     }
@@ -45,6 +40,10 @@ class Force_Front_Page {
         delete_option( $f->option_name );
         flush_rewrite_rules();
     }
+
+    function get_option() {
+        $option = get_option( $this->option_name );
+        return ! $option || empty( $option ) ? $this->default_value : $option;
     }
 
     function rewrite_rules_array( $rules ) {
