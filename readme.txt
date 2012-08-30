@@ -1,5 +1,4 @@
 === Force Front Page ===
-
 Contributors: viniciusmassuchetto, leogermani
 Tags: rewrite rules, templates, home page
 Requires at least: 3.0

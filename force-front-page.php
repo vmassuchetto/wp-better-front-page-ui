@@ -62,27 +62,27 @@ class Force_Front_Page {
 
     // If it existed, we could filter is_front_page, but since it relies on this option, we filter it here
     function filter_show_on_front($value) {
-        
-        // TODO: DO we really need to bother with this? Is this a good thingo to do?
+
+        // TODO: Do we really need to bother with this? Is this a good thingo to do?
         // The point here is to filter only when is_front_page() calls it
         #$callStack = debug_backtrace();
         #if (!is_array($callStack) || !isset($callStack[4]) || !is_array($callStack[4]) || !isset($callStack[4]['function']) || $callStack[4]['function'] != 'is_front_page')
         #    return $value;
         ///////////////////////////////////////////////////////////////////////////////////
         $value = 'posts';
-        if (is_home() && get_query_var('force_home') == 1)
+        if ( is_home() && get_query_var( 'force_home' ) == 1 )
             $value = 'force';
         return $value;
     }
-    
+
     function admin_init() {
-        
+
         add_settings_field( $this->option_name, __( 'Post Home Page', 'force_front_page' ),
             array( $this, 'output_setting_form' ), 'permalink', 'optional' );
-            
+
         // sadly register_setting is useless in the permalink page, so we will have to save it on our own
-        //register_setting( 'permalink', $this->option_name, array($this, 'sanitize_option') );
-        
+        // register_setting( 'permalink', $this->option_name, array($this, 'sanitize_option') );
+
         global $pagenow;
         if ($pagenow == 'options-permalink.php') {
             if (isset($_POST[$this->option_name])) {
@@ -91,12 +91,11 @@ class Force_Front_Page {
             } else {
                 delete_option($this->option_name);
             }
-            
         }
     }
-    
-    function sanitize_option($value) {
-        return sanitize_title($value);
+
+    function sanitize_option( $value ) {
+        return sanitize_title( $value );
     }
 
     function output_setting_form() {
@@ -109,10 +108,10 @@ class Force_Front_Page {
         <style type="text/css">
             .force-front-page-posts-page input { float:none !important; }
         </style>
-        <?
+        <?php
     }
-    
-    //ok, This is ugly
+
+    // ok, This is ugly
     function remove_reading_option() {
         ?>
         <script>
