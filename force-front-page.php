@@ -132,3 +132,11 @@ add_action( 'plugins_loaded', 'force_front_page_init' );
 register_activation_hook( __FILE__, array( 'Force_Front_Page', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'Force_Front_Page', 'deactivate' ) );
 register_uninstall_hook( __FILE__, array( 'Force_Front_Page', 'uninstall' ) );
+
+function the_posts_home_url() {
+    echo get_the_posts_home_url();
+}
+
+function get_the_posts_home_url() {
+    return home_url( get_option( $this->option_name ) );
+}
