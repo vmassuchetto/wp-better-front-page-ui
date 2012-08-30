@@ -48,11 +48,11 @@ class Force_Front_Page {
 
     function rewrite_rules_array( $rules ) {
         $option = $this->get_option();
-        $posts_home_rule = array(
+        $new_rules = array(
             $option . '/?$' => 'index.php?force_home=1',
-            $option . '/page/?([0-9]{1,})/?$' => 'index.php?force_home=1&paged=$matches[1]' ,
+            $option . '/page/?([0-9]{1,})/?$' => 'index.php?force_home=1&paged=$matches[1]',
         );
-        return array_merge( $posts_home_rule, $rules );
+        return array_merge( $new_rules, $rules );
     }
 
     function query_vars( $vars ) {
