@@ -16,11 +16,11 @@ class Force_Front_Page {
     function Force_Front_Page() {
         $this->option_name = 'blog_base';
         $this->default_value = 'blog';
-        
-        register_activation_hook( __FILE__, array( $this, 'activate' ) );
+
         if ( is_admin() ) {
             add_action( 'admin_init', array( $this, 'admin_init' ) );
         }
+
         add_action( 'rewrite_rules_array', array( $this, 'rewrite_rules_array' ), 9999 );
         add_filter( 'option_show_on_front', array( $this, 'filter_show_on_front' ) );
         add_filter( 'query_vars', array( $this, 'query_vars' ) );
@@ -33,7 +33,18 @@ class Force_Front_Page {
     }
     
     function activate() {
-        //TODO: Flush Rules
+        flush_rewrite_rules();
+    }
+
+    function deactivate() {
+        flush_rewrite_rules();
+    }
+
+    function uninstall() {
+        $f = new Force_Front_Page();
+        delete_option( $f->option_name );
+        flush_rewrite_rules();
+    }
     }
 
     function rewrite_rules_array( $rules ) {
@@ -118,4 +129,7 @@ function force_front_page_init() {
     if (locate_template('front-page.php'))
         new Force_Front_Page();
 }
-add_action( 'init', 'force_front_page_init' );
+
+register_activation_hook( __FILE__, array( 'Force_Front_Page', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'Force_Front_Page', 'deactivate' ) );
+register_uninstall_hook( __FILE__, array( 'Force_Front_Page', 'uninstall' ) );
