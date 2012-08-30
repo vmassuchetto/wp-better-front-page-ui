@@ -10,12 +10,12 @@
 
 class Force_Front_Page {
 
-    var $option_name;
-    var $default_value;
+    public static $option_name = 'blog_base';
+    public static $default_value = 'blog';
 
     function Force_Front_Page() {
-        $this->option_name = 'blog_base';
-        $this->default_value = 'blog';
+        #self::$option_name = 'blog_base';
+        #self::$default_value = 'blog';
 
         if ( is_admin() ) {
             add_action( 'admin_init', array( $this, 'admin_init' ) );
@@ -26,7 +26,7 @@ class Force_Front_Page {
         add_filter( 'query_vars', array( $this, 'query_vars' ) );
         add_action( 'admin_print_footer_scripts', array( $this, 'remove_reading_option' ) );
     }
-
+    
     function activate() {
         flush_rewrite_rules();
     }
@@ -36,14 +36,13 @@ class Force_Front_Page {
     }
 
     function uninstall() {
-        $f = new Force_Front_Page();
-        delete_option( $f->option_name );
+        delete_option( self::$option_name );
         flush_rewrite_rules();
     }
 
     function get_option() {
-        $option = get_option( $this->option_name );
-        return ! $option || empty( $option ) ? $this->default_value : $option;
+        $option = get_option( self::$option_name );
+        return ! $option || empty( $option ) ? self::$default_value : $option;
     }
 
     function rewrite_rules_array( $rules ) {
@@ -77,19 +76,19 @@ class Force_Front_Page {
 
     function admin_init() {
 
-        add_settings_field( $this->option_name, __( 'Post Home Page', 'force_front_page' ),
+        add_settings_field( self::$option_name, __( 'Post Home Page', 'force_front_page' ),
             array( $this, 'output_setting_form' ), 'permalink', 'optional' );
 
         // sadly register_setting is useless in the permalink page, so we will have to save it on our own
-        // register_setting( 'permalink', $this->option_name, array($this, 'sanitize_option') );
+        // register_setting( 'permalink', self::$option_name, array($this, 'sanitize_option') );
 
         global $pagenow;
         if ( $pagenow == 'options-permalink.php' ) {
-            if ( isset( $_POST[$this->option_name] ) ) {
-                $value = $this->sanitize_option( $_POST[$this->option_name] );
-                update_option( $this->option_name, $value );
+            if ( isset( $_POST[self::$option_name] ) ) {
+                $value = $this->sanitize_option( $_POST[self::$option_name] );
+                update_option( self::$option_name, $value );
             } else {
-                delete_option( $this->option_name );
+                delete_option( self::$option_name );
             }
         }
     }
@@ -102,7 +101,7 @@ class Force_Front_Page {
         $option = $this->get_option();
         ?>
         <p class="force-front-page-posts-page"><label>
-            <?php echo home_url(); ?>/<input name="<?php echo $this->option_name; ?>" type="text" value="<?php echo $option; ?>" class="tog" />
+            <?php echo home_url(); ?>/<input name="<?php echo self::$option_name; ?>" type="text" value="<?php echo $option; ?>" class="tog" />
         </label></p>
         <p class="description"><?php _e( 'This will be the home for your posts', 'force_front_page' ); ?></p>
         <style type="text/css">
@@ -134,9 +133,14 @@ register_deactivation_hook( __FILE__, array( 'Force_Front_Page', 'deactivate' ) 
 register_uninstall_hook( __FILE__, array( 'Force_Front_Page', 'uninstall' ) );
 
 function the_posts_home_url() {
-    echo get_the_posts_home_url();
+    $output = get_the_posts_home_url();
+    if ($output)
+        echo $output;
 }
 
 function get_the_posts_home_url() {
-    return home_url( get_option( $this->option_name ) );
+    if (class_exists('Force_Front_Page'))
+        return home_url( get_option( Force_Front_Page::$option_name ) );
+    else
+        return false;
 }
