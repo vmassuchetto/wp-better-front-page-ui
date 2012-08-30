@@ -102,7 +102,7 @@ class Force_Front_Page {
         $option = $this->get_option();
         ?>
         <p class="force-front-page-posts-page"><label>
-            <?php echo home_url(); ?>/<input name="force_front_page_posts_page" type="text" value="<?php echo $option; ?>" class="tog" />
+            <?php echo home_url(); ?>/<input name="<?php echo $this->option_name; ?>" type="text" value="<?php echo $option; ?>" class="tog" />
         </label></p>
         <p class="description"><?php _e( 'This will be the home for your posts', 'force_front_page' ); ?></p>
         <style type="text/css">
