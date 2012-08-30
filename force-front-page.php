@@ -123,10 +123,11 @@ class Force_Front_Page {
 }
 
 function force_front_page_init() {
-    //This plugin only makes sense if you have a front_page.php in your theme
-    if (locate_template('front-page.php'))
+    // This plugin only makes sense if you have a front_page.php in your theme
+    if ( file_exists( get_stylesheet_directory() . '/front-page.php' ) )
         new Force_Front_Page();
 }
+add_action( 'plugins_loaded', 'force_front_page_init' );
 
 register_activation_hook( __FILE__, array( 'Force_Front_Page', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'Force_Front_Page', 'deactivate' ) );
