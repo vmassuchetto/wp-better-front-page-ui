@@ -3,7 +3,7 @@
  * Plugin Name: Force Front Page
  * Plugin URI: http://github.com/vmassuchetto/wordpress-force-front-page
  * Description: Force the front page to the <code>front-page.php</code> template file without any user interference or dummy pages.
- * Version: 0.01
+ * Version: 0.02
  * Author: Leo Germani, Vinicius Massuchetto
  * Author URI: http://github.com/vmassuchetto/wordpress-force-front-page
  */

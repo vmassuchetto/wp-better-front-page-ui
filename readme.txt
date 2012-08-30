@@ -61,10 +61,15 @@ Upload the plugin to your `wp-content/plugins` directory and optionally go to
 
 == TODO ==
 
-* Flush Rules on activation and Reset rules to default on plugin deactivation
 * Adds the possibility to users add links to home and blog to the menu
 
 == Changelog ==
+
+= 0.02 =
+
+* Better options handling.
+* Flush on activate and deactivate.
+* Template functions.
 
 = 0.01 =
 
