@@ -25,6 +25,10 @@ class Force_Front_Page {
         add_filter( 'option_show_on_front', array( $this, 'filter_show_on_front' ) );
         add_filter( 'query_vars', array( $this, 'query_vars' ) );
         add_action( 'admin_print_footer_scripts', array( $this, 'remove_reading_option' ) );
+        
+        //TODO: using admin_head instead to avoid beeing the first meta_box
+        //maybe reorder it before printing so it is the second metabox
+        add_action( 'admin_head', array( $this, 'add_meta_box' ) );
     }
     
     function get_option() {
@@ -110,6 +114,67 @@ class Force_Front_Page {
         </script>
         <?php
     }
+    
+    
+    // Nav menu methods
+    
+    function add_meta_box() {
+        add_meta_box( "add-home-and-blog", __('Home and Blog', 'force_front_page'), array($this, 'nav_menu_meta_box'), 'nav-menus', 'side', 'default' );
+    }
+    
+    function nav_menu_meta_box() {
+        #var_dump($x, $y);
+        global $_nav_menu_placeholder, $nav_menu_selected_id;
+
+        ?>
+        <div id="home-and-blog" class="posttypediv">
+            
+            <p class="howto"><?php _e(''); ?></p>
+
+            <div id="tabs-panel-home-and-blog" class="tabs-panel">
+                <ul id="<?php echo $post_type_name; ?>checklist-most-recent" class="categorychecklist form-no-clear">
+                   <li>
+                        <label class="menu-item-title"><input type="checkbox" class="menu-item-checkbox" name="menu-item[-1][menu-item-object-id]" value="1"> <?php _e('Home'); ?></label>
+                        <input type="hidden" class="menu-item-db-id" name="menu-item[-1][menu-item-db-id]" value="0">
+                        <input type="hidden" class="menu-item-object" name="menu-item[-1][menu-item-object]" value="home-and-blog">
+                        <input type="hidden" class="menu-item-parent-id" name="menu-item[-1][menu-item-parent-id]" value="0">
+                        <input type="hidden" class="menu-item-type" name="menu-item[-1][menu-item-type]" value="extended">
+                        <input type="hidden" class="menu-item-title" name="menu-item[-1][menu-item-title]" value="<?php _e('Home'); ?>">
+                        <input type="hidden" class="menu-item-url" name="menu-item[-1][menu-item-url]" value="<?php echo site_url(); ?>">
+                        <input type="hidden" class="menu-item-target" name="menu-item[-1][menu-item-target]" value="">
+                        <input type="hidden" class="menu-item-attr_title" name="menu-item[-1][menu-item-attr_title]" value="">
+                        <input type="hidden" class="menu-item-classes" name="menu-item[-1][menu-item-classes]" value="">
+                        <input type="hidden" class="menu-item-xfn" name="menu-item[-1][menu-item-xfn]" value="">
+                    </li>
+                    <li>
+                        <label class="menu-item-title"><input type="checkbox" class="menu-item-checkbox" name="menu-item[-2][menu-item-object-id]" value="2"> <?php _e('Blog'); ?></label>
+                        <input type="hidden" class="menu-item-db-id" name="menu-item[-2][menu-item-db-id]" value="0">
+                        <input type="hidden" class="menu-item-object" name="menu-item[-2][menu-item-object]" value="home-and-blog">
+                        <input type="hidden" class="menu-item-parent-id" name="menu-item[-2][menu-item-parent-id]" value="0">
+                        <input type="hidden" class="menu-item-type" name="menu-item[-2][menu-item-type]" value="extended">
+                        <input type="hidden" class="menu-item-title" name="menu-item[-2][menu-item-title]" value="<?php _e('Blog'); ?>">
+                        <input type="hidden" class="menu-item-url" name="menu-item[-2][menu-item-url]" value="<?php echo home_url( get_option( $this->option_name ) ); ?>">
+                        <input type="hidden" class="menu-item-target" name="menu-item[-2][menu-item-target]" value="">
+                        <input type="hidden" class="menu-item-attr_title" name="menu-item[-2][menu-item-attr_title]" value="">
+                        <input type="hidden" class="menu-item-classes" name="menu-item[-2][menu-item-classes]" value="">
+                        <input type="hidden" class="menu-item-xfn" name="menu-item[-2][menu-item-xfn]" value="">
+                    </li>
+                </ul>
+            </div><!-- /.tabs-panel -->
+
+            
+
+            <p class="button-controls">
+                <span class="add-to-menu">
+                    <img class="waiting" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" />
+                    <input type="submit"<?php disabled( $nav_menu_selected_id, 0 ); ?> class="button-secondary submit-add-to-menu" value="<?php esc_attr_e('Add to Menu'); ?>" name="add-extended-menu-item" id="submit-extended-home-and-blog" />
+                </span>
+            </p>
+
+        </div><!-- /.posttypediv -->
+        <?php
+    }
+    
 
 }
 
