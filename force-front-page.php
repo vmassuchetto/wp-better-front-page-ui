@@ -12,9 +12,9 @@ class Force_Front_Page {
 
     var $option_name;
     var $default_value;
-    
+
     function Force_Front_Page() {
-        $this->option_name = 'force_front_page_posts_page';
+        $this->option_name = 'blog_base';
         $this->default_value = 'blog';
         
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
