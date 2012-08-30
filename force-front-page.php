@@ -84,12 +84,12 @@ class Force_Front_Page {
         // register_setting( 'permalink', $this->option_name, array($this, 'sanitize_option') );
 
         global $pagenow;
-        if ($pagenow == 'options-permalink.php') {
-            if (isset($_POST[$this->option_name])) {
-                $value = $this->sanitize_option($_POST[$this->option_name]);
-                update_option($this->option_name, $value);
+        if ( $pagenow == 'options-permalink.php' ) {
+            if ( isset( $_POST[$this->option_name] ) ) {
+                $value = $this->sanitize_option( $_POST[$this->option_name] );
+                update_option( $this->option_name, $value );
             } else {
-                delete_option($this->option_name);
+                delete_option( $this->option_name );
             }
         }
     }
