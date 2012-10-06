@@ -1,21 +1,23 @@
 <?php
 /*
- * Plugin Name: Force Front Page
- * Plugin URI: http://github.com/vmassuchetto/wordpress-force-front-page
- * Description: Force the front page to the <code>front-page.php</code> template file without any user interference or dummy pages.
+ * Plugin Name: Better Front Page UI
+ * Plugin URI: http://github.com/vmassuchetto/wordpress-better-front-page-ui
+ * Description: Use the front page to the <code>front-page.php</code> template file without any user interference or dummy pages.
  * Version: 0.02
  * Author: Leo Germani, Vinicius Massuchetto
- * Author URI: http://github.com/vmassuchetto/wordpress-force-front-page
+ * Author URI: http://github.com/vmassuchetto/wordpress-better-front-page-ui
  */
 
-class Force_Front_Page {
+class Better_Front_Page_UI {
 
     public static $option_name = 'blog_base';
     public static $default_value = 'blog';
 
-    function Force_Front_Page() {
-        #self::$option_name = 'blog_base';
-        #self::$default_value = 'blog';
+    function Better_Front_Page_UI() {
+        /*
+        self::$option_name = 'blog_base';
+        self::$default_value = 'blog';
+        */
 
         if ( is_admin() ) {
             add_action( 'admin_init', array( $this, 'admin_init' ) );
@@ -26,7 +28,7 @@ class Force_Front_Page {
         add_filter( 'query_vars', array( $this, 'query_vars' ) );
         add_action( 'admin_print_footer_scripts', array( $this, 'remove_reading_option' ) );
     }
-    
+
     function activate() {
         flush_rewrite_rules();
     }
@@ -59,15 +61,26 @@ class Force_Front_Page {
         return $vars;
     }
 
-    // If it existed, we could filter is_front_page, but since it relies on this option, we filter it here
+    /*
+     * If it existed, we could filter is_front_page, but since it relies on
+     * this option, we filter it here
+     */
     function filter_show_on_front($value) {
 
-        // TODO: Do we really need to bother with this? Is this a good thingo to do?
-        // The point here is to filter only when is_front_page() calls it
-        #$callStack = debug_backtrace();
-        #if (!is_array($callStack) || !isset($callStack[4]) || !is_array($callStack[4]) || !isset($callStack[4]['function']) || $callStack[4]['function'] != 'is_front_page')
-        #    return $value;
-        ///////////////////////////////////////////////////////////////////////////////////
+        /*
+         * @TODO: Do we really need to bother with this? Is this a good thingo
+         * to do? The point here is to filter only when is_front_page() calls it
+         *
+         */
+        /*
+        $callStack = debug_backtrace();
+        if (!is_array($callStack) ||
+            !isset($callStack[4]) ||
+            !is_array($callStack[4]) ||
+            !isset($callStack[4]['function']) ||
+            $callStack[4]['function'] != 'is_front_page')
+            return $value;
+        */
         $value = 'posts';
         if ( is_home() && get_query_var( 'force_home' ) == 1 )
             $value = 'force';
@@ -76,11 +89,15 @@ class Force_Front_Page {
 
     function admin_init() {
 
-        add_settings_field( self::$option_name, __( 'Post Home Page', 'force_front_page' ),
+        add_settings_field( self::$option_name, __( 'Post Home Page', 'better_front_page_ui' ),
             array( $this, 'output_setting_form' ), 'permalink', 'optional' );
 
-        // sadly register_setting is useless in the permalink page, so we will have to save it on our own
-        // register_setting( 'permalink', self::$option_name, array($this, 'sanitize_option') );
+        /*
+         * sadly register_setting is useless in the permalink page, so we will
+         * have to save it on our own
+         */
+
+        /* register_setting( 'permalink', self::$option_name, array($this, 'sanitize_option') ); */
 
         global $pagenow;
         if ( $pagenow == 'options-permalink.php' ) {
@@ -100,17 +117,17 @@ class Force_Front_Page {
     function output_setting_form() {
         $option = $this->get_option();
         ?>
-        <p class="force-front-page-posts-page"><label>
+        <p class="better-front-page-ui-posts-page"><label>
             <?php echo home_url(); ?>/<input name="<?php echo self::$option_name; ?>" type="text" value="<?php echo $option; ?>" class="tog" />
         </label></p>
-        <p class="description"><?php _e( 'This will be the home for your posts', 'force_front_page' ); ?></p>
+        <p class="description"><?php _e( 'This will be the home for your posts', 'better_front_page_ui' ); ?></p>
         <style type="text/css">
-            .force-front-page-posts-page input { float:none !important; }
+            .better-front-page-ui-posts-page input { float:none !important; }
         </style>
         <?php
     }
 
-    // ok, This is ugly
+    /* ok, This is ugly */
     function remove_reading_option() {
         ?>
         <script>
@@ -121,16 +138,16 @@ class Force_Front_Page {
 
 }
 
-function force_front_page_init() {
-    // This plugin only makes sense if you have a front_page.php in your theme
+function better_front_page_ui_init() {
+    /* This plugin only makes sense if you have a front_page.php in your theme */
     if ( file_exists( get_stylesheet_directory() . '/front-page.php' ) )
-        new Force_Front_Page();
+        new Better_Front_Page_UI();
 }
-add_action( 'plugins_loaded', 'force_front_page_init' );
+add_action( 'plugins_loaded', 'better_front_page_ui_init' );
 
-register_activation_hook( __FILE__, array( 'Force_Front_Page', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'Force_Front_Page', 'deactivate' ) );
-register_uninstall_hook( __FILE__, array( 'Force_Front_Page', 'uninstall' ) );
+register_activation_hook( __FILE__, array( 'Better_Front_Page_UI', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'Better_Front_Page_UI', 'deactivate' ) );
+register_uninstall_hook( __FILE__, array( 'Better_Front_Page_UI', 'uninstall' ) );
 
 function the_posts_home_url() {
     $output = get_the_posts_home_url();
@@ -139,8 +156,8 @@ function the_posts_home_url() {
 }
 
 function get_the_posts_home_url() {
-    if (class_exists('Force_Front_Page'))
-        return home_url( get_option( Force_Front_Page::$option_name ) );
+    if (class_exists('Better_Front_Page_UI'))
+        return home_url( get_option( Better_Front_Page_UI::$option_name ) );
     else
         return false;
 }
